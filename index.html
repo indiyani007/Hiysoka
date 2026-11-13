@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="meta-title">Warung Techno - Pusat Aplikasi Premium</title>
+    <meta name="description" id="meta-desc" content="Jual aplikasi premium legal, bergaransi, dan proses cepat.">
+    <meta name="google-site-verification" id="meta-gverify" content="">
+    <link rel="icon" id="site-favicon" href="https://placehold.co/64x64/4f46e5/ffffff?text=WT">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col">
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- CUSTOM CONFIRMATION MODAL -->
+    <div id="confirm-modal" class="fixed inset-0 z-[90] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all">
+            <div class="flex items-center gap-3 text-amber-500 mb-3">
+                <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white" id="confirm-title">Konfirmasi</h3>
+            </div>
+            <p id="confirm-message" class="text-slate-600 dark:text-slate-400 text-sm mb-6">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeConfirmModal()" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Batal</button>
+                <button id="confirm-yes-btn" class="px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== HEADER / NAVBAR ==================== -->
+    <header class="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 glass-card border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            <!-- Brand Logo & Title -->
+            <div onclick="switchView('store', 'home')" class="flex items-center gap-3 cursor-pointer group">
+                <img id="header-logo" src="https://placehold.co/80x80/4f46e5/ffffff?text=WT" alt="Logo" class="w-10 h-10 rounded-xl object-cover shadow-md group-hover:scale-105 transition">
+                <div>
+                    <h1 id="header-title" class="font-extrabold text-lg sm:text-xl tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">Warung Techno</h1>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block leading-none">Digital App Store</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links (Desktop) -->
+            <nav id="desktop-nav" class="hidden md:flex items-center gap-1 lg:gap-2">
+                <!-- Populated dynamically by JS -->
+            </nav>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2">
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="Ubah Mode Terang/Gelap">
+                    <i id="theme-icon" class="fa-solid fa-moon text-lg"></i>
+                </button>
+
+                <!-- Admin Panel Button -->
+                <button onclick="openAdminPanel()" id="nav-admin-btn" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-900 text-white dark:bg-indigo-600 dark:hover:bg-indigo-500 hover:bg-slate-800 transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span class="hidden sm:inline">Panel Web</span>
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 space-y-1">
+            <!-- Populated dynamically by JS -->
+        </div>
+    </header>
+
+    <!-- ==================== STOREFRONT VIEW ==================== -->
+    <main id="storefront-view" class="flex-grow">
+        
+        <!-- SUB-VIEW: HOME (KATALOG & BANNER) -->
+        <div id="store-home-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
+            
+            <!-- Promotional Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 text-white shadow-xl">
+                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="relative z-10 p-6 sm:p-10 lg:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-4 max-w-2xl text-center md:text-left">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span id="banner-badge-text">Promo Spesial Hari Ini</span>
+                        </div>
+                        <h2 id="banner-title-text" class="text-2xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
+                            Langganan Aplikasi Premium Mulai Rp 10.000-an!
+                        </h2>
+                        <p id="banner-subtitle-text" class="text-indigo-100 text-sm sm:text-base leading-relaxed">
+                            Nikmati akses Netflix, Spotify, Canva Pro, ChatGPT Plus & aplikasi produktivitas lainnya dengan harga hemat, legal, full garansi & pengiriman instan.
+                        </p>
+                        <div class="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
+                            <a href="#katalog-section" class="px-5 py-2.5 rounded-xl bg-white text-indigo-700 font-bold text-sm shadow-lg hover:bg-indigo-50 transition flex items-center gap-2">
+                                <i class="fa-solid fa-cart-shopping"></i> Belanja Sekarang
+                            </a>
+                            <button onclick="switchView('store', 'cek-pesanan')" class="px-5 py-2.5 rounded-xl bg-indigo-800/50 hover:bg-indigo-800/70 text-white font-semibold text-sm border border-white/20 transition flex items-center gap-2">
+                                <i class="fa-solid fa-magnifying-glass"></i> Cek Pesanan
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hidden lg:flex items-center justify-center">
+                        <div class="w-56 h-56 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 p-6 flex flex-col justify-between shadow-2xl animate-pulse-soft">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold uppercase tracking-wider text-indigo-200">Warung Techno</span>
+                                <i class="fa-solid fa-bolt text-amber-300 text-xl"></i>
+                            </div>
+                            <div class="my-auto text-center space-y-2">
+                                <div class="flex justify-center -space-x-2">
+                                    <span class="w-11 h-11 rounded-2xl bg-red-600 flex items-center justify-center shadow-lg border-2 border-indigo-500"><i class="fa-solid fa-play text-white"></i></span>
+                                    <span class="w-11 h-11 rounded-2xl bg-emerald-500 flex items-center justify-center shadow-lg border-2 border-indigo-500"><i class="fa-brands fa-spotify text-white text-lg"></i></span>
+                                    <span class="w-11 h-11 rounded-2xl bg-sky-500 flex items-center justify-center shadow-lg border-2 border-indigo-500"><i class="fa-solid fa-wand-magic-sparkles text-white"></i></span>
+                                </div>
+                                <p class="font-bold text-sm">100% Bergaransi</p>
+                                <p class="text-[11px] text-indigo-200">Kirim Otomatis & Cepat</p>
+                            </div>
+                            <div class="text-[11px] text-center bg-emerald-500/30 border border-emerald-400/40 rounded-lg py-1 font-semibold text-emerald-200">
+                                <i class="fa-solid fa-shield-halved mr-1"></i> Terpercaya & Aman
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Highlight Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex items-center gap-3.5 shadow-sm">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-bolt-lightning text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm">Kirim Otomatis</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Proses instan 24 jam</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex items-center gap-3.5 shadow-sm">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-shield-check text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm">Full Garansi</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Jaminan selama durasi</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex items-center gap-3.5 shadow-sm">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-tags text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm">Harga Termurah</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Hemat hingga 80%</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex items-center gap-3.5 shadow-sm">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-headset text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm">Bantuan CS Cepat</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Via WhatsApp & Telegram</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter & Search Controls -->
+            <div id="katalog-section" class="space-y-4 pt-2">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-extrabold flex items-center gap-2">
+                            <i class="fa-solid fa-fire text-amber-500"></i> Katalog Aplikasi Premium
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Pilih produk digital favoritmu dan pesan langsung tanpa ribet</p>
+                    </div>
+                    
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-80">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="search-product-input" oninput="renderStoreProducts()" placeholder="Cari Netflix, Canva, Spotify..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <!-- Category Pills -->
+                <div id="category-filter-list" class="flex items-center gap-2 overflow-x-auto pb-2">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Populated by JS -->
+            </div>
+
+        </div>
+
+        <!-- SUB-VIEW: CEK PESANAN -->
+        <div id="store-cek-pesanan-section" class="hidden max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm">
+                <div class="text-center max-w-xl mx-auto space-y-2 mb-6">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto text-xl">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <h2 id="page-cek-title" class="text-2xl font-extrabold">Cek Status Pesanan</h2>
+                    <p id="page-cek-desc" class="text-sm text-slate-500 dark:text-slate-400">Masukkan Nomor ID Order (Contoh: WT-1001) atau Nama Anda untuk melihat status pesanan dan data akun otomatis.</p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                    <input type="text" id="track-order-input" placeholder="Masukkan ID Order (misal: WT-1001) atau Nama..." class="flex-grow px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button onclick="handleTrackOrder()" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition flex items-center justify-center gap-2 shrink-0">
+                        <i class="fa-solid fa-magnifying-glass"></i> Lacak Order
+                    </button>
+                </div>
+
+                <!-- Result Container -->
+                <div id="track-order-result" class="mt-8"></div>
+            </div>
+        </div>
+
+        <!-- SUB-VIEW: DYNAMIC PAGE (TENTANG, KONTAK, CUSTOM PAGES) -->
+        <div id="store-dynamic-page-section" class="hidden max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-10 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-800 pb-4 flex items-center justify-between">
+                    <h2 id="dyn-page-title" class="text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">Judul Halaman</h2>
+                    <button onclick="switchView('store', 'home')" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 transition">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Beranda
+                    </button>
+                </div>
+                <div id="dyn-page-content" class="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line">
+                    <!-- Content goes here -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==================== MODAL CHECKOUT / PEMESANAN CEPAT ==================== -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl relative my-8">
+            <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="text-lg font-extrabold mb-1">Form Pemesanan Cepat</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-5">Cukup isi nama dan jumlah pembelian untuk langsung pesan via WhatsApp</p>
+
+            <!-- Product Summary -->
+            <div class="flex items-center gap-3.5 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/70 dark:border-slate-700/70 mb-5">
+                <img id="co-prod-img" src="" alt="Product" class="w-14 h-14 rounded-xl object-cover shrink-0">
+                <div class="flex-grow min-w-0">
+                    <span id="co-prod-cat" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">Kategori</span>
+                    <h4 id="co-prod-name" class="font-bold text-sm truncate mt-0.5">Nama Produk</h4>
+                    <p id="co-prod-price" class="text-indigo-600 dark:text-indigo-400 font-extrabold text-sm">Rp 0</p>
+                </div>
+            </div>
+
+            <!-- Form Inputs (Disederhanakan: Tanpa Nomor WhatsApp & Tanpa Catatan Tambahan) -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold mb-1.5">Nama Lengkap / Panggilan <span class="text-red-500">*</span></label>
+                    <input type="text" id="co-customer-name" placeholder="Contoh: Budi Santoso" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1.5">Jumlah Beli</label>
+                        <input type="number" id="co-qty" value="1" min="1" oninput="updateCheckoutTotal()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1.5">Total Bayar</label>
+                        <div id="co-total-display" class="w-full px-3.5 py-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 font-extrabold text-sm">
+                            Rp 0
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Checkout Button (WhatsApp Langsung) -->
+            <div class="mt-6">
+                <button onclick="processCheckout('WhatsApp')" class="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Pesan Sekarang via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL LOGIN ADMIN ==================== -->
+    <div id="admin-login-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button onclick="closeAdminLoginModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center space-y-2 mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mx-auto text-xl shadow-lg shadow-indigo-600/30">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h3 class="text-lg font-extrabold">Login Panel Web</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Masukkan password admin untuk mengelola Warung Techno</p>
+            </div>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Password Admin</label>
+                    <input type="password" id="admin-login-pass" placeholder="Masukkan password..." required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <p class="text-[11px] text-slate-400 mt-1.5"><i class="fa-solid fa-circle-info mr-1"></i>Default password: <code class="text-indigo-500 font-semibold">admin123</code></p>
+                </div>
+                <button type="submit" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition">
+                    Masuk ke Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== PANEL WEB (ADMIN DASHBOARD VIEW) ==================== -->
+    <div id="admin-view" class="hidden flex-grow bg-slate-100 dark:bg-slate-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            
+            <!-- Top Admin Bar -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 mb-6 flex flex-wrap items-center justify-between gap-4 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-gauge-high"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-extrabold text-base sm:text-lg">Panel Admin Warung Techno</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Kelola produk, stok otomatis, orderan & pengaturan website</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="switchView('store', 'home')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-store"></i> Lihat Toko
+                    </button>
+                    <button onclick="logoutAdmin()" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Sidebar Navigation Admin -->
+                <aside class="lg:col-span-3">
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-3 space-y-1 sticky top-20 shadow-sm">
+                        <button onclick="switchAdminTab('dashboard')" id="adm-tab-dashboard" class="adm-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition">
+                            <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
+                        </button>
+                        <button onclick="switchAdminTab('products')" id="adm-tab-products" class="adm-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition">
+                            <i class="fa-solid fa-boxes-stacked w-5 text-center"></i> Kelola Produk & Stok
+                        </button>
+                        <button onclick="switchAdminTab('categories')" id="adm-tab-categories" class="adm-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition">
+                            <i class="fa-solid fa-layer-group w-5 text-center"></i> Kategori Produk
+                        </button>
+                        <button onclick="switchAdminTab('orders')" id="adm-tab-orders" class="adm-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition">
+                            <span class="flex items-center gap-3"><i class="fa-solid fa-clipboard-list w-5 text-center"></i> List Orderan</span>
+                            <span id="adm-order-badge" class="px-2 py-0.5 text-[10px] rounded-full bg-amber-500 text-white font-bold">0</span>
+                        </button>
+                        <button onclick="switchAdminTab('pages')" id="adm-tab-pages" class="adm-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition">
+                            <i class="fa-solid fa-file-lines w-5 text-center"></i> Kelola Halaman
+                        </button>
+                        <button onclick="switchAdminTab('settings')" id="adm-tab-settings" class="adm-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition">
+                            <i class="fa-solid fa-gear w-5 text-center"></i> Pengaturan Website
+                        </button>
+                        <button onclick="switchAdminTab('password')" id="adm-tab-password" class="adm-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition">
+                            <i class="fa-solid fa-key w-5 text-center"></i> Password Admin
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Admin Main Content Panel -->
+                <div class="lg:col-span-9 space-y-6">
+
+                    <!-- 1. TAB DASHBOARD -->
+                    <section id="adm-content-dashboard" class="adm-section space-y-6">
+                        <!-- Stat Cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-semibold text-slate-500">Total Pendapatan (Paid)</span>
+                                    <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center"><i class="fa-solid fa-sack-dollar"></i></span>
+                                </div>
+                                <h3 id="stat-revenue" class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">Rp 0</h3>
+                                <p class="text-[11px] text-slate-400 mt-1">Dari transaksi berstatus Paid</p>
+                            </div>
+                            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-semibold text-slate-500">Total Orderan</span>
+                                    <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center"><i class="fa-solid fa-bag-shopping"></i></span>
+                                </div>
+                                <h3 id="stat-total-orders" class="text-xl font-extrabold">0</h3>
+                                <p id="stat-orders-breakdown" class="text-[11px] text-slate-400 mt-1">0 Paid • 0 Pending • 0 Cancel</p>
+                            </div>
+                            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-semibold text-slate-500">Jumlah Produk</span>
+                                    <span class="w-8 h-8 rounded-lg bg-violet-500/10 text-violet-500 flex items-center justify-center"><i class="fa-solid fa-cube"></i></span>
+                                </div>
+                                <h3 id="stat-total-products" class="text-xl font-extrabold">0</h3>
+                                <p id="stat-auto-products" class="text-[11px] text-slate-400 mt-1">0 Produk Kirim Otomatis</p>
+                            </div>
+                            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-semibold text-slate-500">Total Stok Tersedia</span>
+                                    <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center"><i class="fa-solid fa-warehouse"></i></span>
+                                </div>
+                                <h3 id="stat-total-stock" class="text-xl font-extrabold">0</h3>
+                                <p id="stat-low-stock" class="text-[11px] text-amber-500 mt-1">0 Produk stok menipis</p>
+                            </div>
+                        </div>
+
+                        <!-- Recent Orders & Quick Stock Control -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Recent Orders -->
+                            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="font-bold text-sm flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-indigo-500"></i> Orderan Terbaru</h4>
+                                    <button onclick="switchAdminTab('orders')" class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">Lihat Semua</button>
+                                </div>
+                                <div id="dash-recent-orders" class="space-y-3"></div>
+                            </div>
+
+                            <!-- Quick Stock Overview -->
+                            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="font-bold text-sm flex items-center gap-2"><i class="fa-solid fa-boxes-packing text-emerald-500"></i> Kontrol Stok Cepat</h4>
+                                    <button onclick="switchAdminTab('products')" class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">Kelola Produk</button>
+                                </div>
+                                <div id="dash-quick-stock" class="space-y-2.5 max-h-72 overflow-y-auto pr-1"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 2. TAB KELOLA PRODUK & STOK -->
+                    <section id="adm-content-products" class="adm-section hidden space-y-6">
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
+                                <div>
+                                    <h3 class="font-extrabold text-base">Daftar Produk & Pengaturan Stok</h3>
+                                    <p class="text-xs text-slate-500">Tambah produk, atur foto, kirim otomatis, serta tambah/kurangi stok dengan cepat</p>
+                                </div>
+                                <button onclick="openProductFormModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center gap-2 self-start sm:self-auto">
+                                    <i class="fa-solid fa-plus"></i> Tambah Produk Baru
+                                </button>
+                            </div>
+
+                            <div class="overflow-x-auto mt-4">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] uppercase text-slate-400">
+                                            <th class="py-3 px-3">Produk</th>
+                                            <th class="py-3 px-3">Kategori</th>
+                                            <th class="py-3 px-3">Harga</th>
+                                            <th class="py-3 px-3">Kirim Otomatis</th>
+                                            <th class="py-3 px-3 text-center">Atur Stok</th>
+                                            <th class="py-3 px-3 text-right">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-product-tbody" class="divide-y divide-slate-200 dark:divide-slate-800 text-sm">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 3. TAB KELOLA KATEGORI -->
+                    <section id="adm-content-categories" class="adm-section hidden space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm h-fit">
+                                <h3 class="font-bold text-sm mb-3">Tambah Kategori</h3>
+                                <form onsubmit="handleSaveCategory(event)" class="space-y-3">
+                                    <input type="hidden" id="cat-edit-id">
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Nama Kategori</label>
+                                        <input type="text" id="cat-name-input" required placeholder="Contoh: Streaming, Desain, AI..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Ikon FontAwesome (Opsional)</label>
+                                        <input type="text" id="cat-icon-input" placeholder="fa-solid fa-film" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button type="submit" id="cat-submit-btn" class="flex-grow py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">Simpan Kategori</button>
+                                        <button type="button" onclick="resetCategoryForm()" id="cat-cancel-btn" class="hidden px-3 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-semibold">Batal</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="md:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                                <h3 class="font-bold text-sm mb-4">Daftar Kategori Produk</h3>
+                                <div id="admin-category-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 4. TAB LIST ORDERAN -->
+                    <section id="adm-content-orders" class="adm-section hidden space-y-6">
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
+                                <div>
+                                    <h3 class="font-extrabold text-base">List Orderan Pelanggan</h3>
+                                    <p class="text-xs text-slate-500">Atur status orderan menjadi Paid (Lunas), Cancel (Batal), atau Hapus</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <select id="filter-order-status" onchange="renderAdminOrders()" class="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold">
+                                        <option value="ALL">Semua Status</option>
+                                        <option value="PENDING">Pending</option>
+                                        <option value="PAID">Paid (Lunas)</option>
+                                        <option value="CANCEL">Cancel (Batal)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto mt-4">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] uppercase text-slate-400">
+                                            <th class="py-3 px-3">ID & Waktu</th>
+                                            <th class="py-3 px-3">Pelanggan</th>
+                                            <th class="py-3 px-3">Produk & Qty</th>
+                                            <th class="py-3 px-3">Total & Via</th>
+                                            <th class="py-3 px-3">Status</th>
+                                            <th class="py-3 px-3 text-right">Atur Order</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-orders-tbody" class="divide-y divide-slate-200 dark:divide-slate-800 text-sm">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 5. TAB KELOLA HALAMAN -->
+                    <section id="adm-content-pages" class="adm-section hidden space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <!-- Form Add/Edit Page -->
+                            <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm h-fit">
+                                <h3 id="page-form-title" class="font-bold text-sm mb-3">Tambah / Edit Halaman</h3>
+                                <form onsubmit="handleSavePage(event)" class="space-y-3">
+                                    <input type="hidden" id="page-edit-id">
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Judul Halaman</label>
+                                        <input type="text" id="page-title-input" required placeholder="Contoh: Cara Pembelian / FAQ" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Slug URL</label>
+                                        <input type="text" id="page-slug-input" required placeholder="contoh: cara-pembelian" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Isi Konten Halaman</label>
+                                        <textarea id="page-content-input" rows="6" required placeholder="Tuliskan informasi halaman di sini..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm"></textarea>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button type="submit" class="flex-grow py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">Simpan Halaman</button>
+                                        <button type="button" onclick="resetPageForm()" class="px-3 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-semibold">Reset</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- List Pages -->
+                            <div class="lg:col-span-7 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+                                <h3 class="font-bold text-sm mb-1">Daftar Halaman Website</h3>
+                                <p class="text-xs text-slate-500 mb-4">Halaman Tentang, Kontak, Cek Pesanan, dan halaman tambahan yang tampil di menu navigasi</p>
+                                <div id="admin-pages-list" class="space-y-3">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 6. TAB PENGATURAN WEBSITE -->
+                    <section id="adm-content-settings" class="adm-section hidden space-y-6">
+                        <form onsubmit="handleSaveSettings(event)" class="space-y-6">
+                            
+                            <!-- Identitas & SEO Website -->
+                            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
+                                <h3 class="font-bold text-sm border-b border-slate-200 dark:border-slate-800 pb-2.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-globe text-indigo-500"></i> Identitas Situs, Logo & Verifikasi Google
+                                </h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Judul Situs (Nama Web)</label>
+                                        <input type="text" id="set-site-title" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Verifikasi Google (Meta Tag Content / Kode)</label>
+                                        <input type="text" id="set-google-verify" placeholder="Contoh: google-site-verification=xxxx" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Deskripsi Situs (Meta Description)</label>
+                                    <textarea id="set-site-desc" rows="2" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm"></textarea>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">URL Logo Website</label>
+                                        <input type="text" id="set-logo-url" placeholder="https://..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                        <label class="inline-flex items-center gap-1.5 text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold mt-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-upload"></i> Upload File Logo
+                                            <input type="file" accept="image/*" onchange="handleImageUpload(event, 'set-logo-url')" class="hidden">
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">URL Favicon</label>
+                                        <input type="text" id="set-favicon-url" placeholder="https://..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                        <label class="inline-flex items-center gap-1.5 text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold mt-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-upload"></i> Upload File Favicon
+                                            <input type="file" accept="image/*" onchange="handleImageUpload(event, 'set-favicon-url')" class="hidden">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pengaturan Pemesanan WA & Bot Telegram -->
+                            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
+                                <h3 class="font-bold text-sm border-b border-slate-200 dark:border-slate-800 pb-2.5 flex items-center gap-2">
+                                    <i class="fa-brands fa-whatsapp text-emerald-500"></i> Link Pemesanan WhatsApp & Bot Telegram
+                                </h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Nomor WhatsApp Admin (Gunakan kode negara 62)</label>
+                                        <input type="text" id="set-wa-number" placeholder="Contoh: 6281234567890" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Link Beli untuk Bot Telegram</label>
+                                        <input type="text" id="set-telegram-bot" placeholder="Contoh: https://t.me/WarungTechnoBot" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pengaturan Banner Promosi -->
+                            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
+                                <h3 class="font-bold text-sm border-b border-slate-200 dark:border-slate-800 pb-2.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-bullhorn text-amber-500"></i> Pengaturan Banner Promosi Halaman Awal
+                                </h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Label Badge Promo</label>
+                                        <input type="text" id="set-banner-badge" placeholder="Promo Spesial Hari Ini" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Judul Utama Banner Promosi</label>
+                                        <input type="text" id="set-banner-title" placeholder="Langganan Aplikasi Premium..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Subjudul / Deskripsi Banner Promosi</label>
+                                    <textarea id="set-banner-subtitle" rows="2" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Pengaturan Footer Website -->
+                            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
+                                <h3 class="font-bold text-sm border-b border-slate-200 dark:border-slate-800 pb-2.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-shoe-prints text-violet-500"></i> Pengaturan Footer Website
+                                </h3>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Deskripsi Singkat Footer</label>
+                                    <textarea id="set-footer-about" rows="2" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm"></textarea>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Teks Hak Cipta (Copyright)</label>
+                                        <input type="text" id="set-footer-copy" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold mb-1">Link Instagram / Sosial Media</label>
+                                        <input type="text" id="set-footer-ig" placeholder="https://instagram.com/warungtechno" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button type="submit" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-lg shadow-indigo-600/20 transition flex items-center gap-2">
+                                    <i class="fa-solid fa-floppy-disk"></i> Simpan Semua Pengaturan Website
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <!-- 7. TAB ATUR PASSWORD ADMIN -->
+                    <section id="adm-content-password" class="adm-section hidden">
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 max-w-md shadow-sm">
+                            <h3 class="font-bold text-base mb-1">Ubah Password Admin</h3>
+                            <p class="text-xs text-slate-500 mb-4">Pastikan Anda mengingat password baru untuk akses Panel Web</p>
+                            <form onsubmit="handleChangePassword(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Password Lama</label>
+                                    <input type="password" id="pwd-old" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Password Baru</label>
+                                    <input type="password" id="pwd-new" required minlength="4" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold mb-1">Konfirmasi Password Baru</label>
+                                    <input type="password" id="pwd-confirm" required minlength="4" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                                </div>
+                                <button type="submit" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition">
+                                    Perbarui Password
+                                </button>
+                            </form>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL TAMBAH / EDIT PRODUK (ADMIN) ==================== -->
+    <div id="product-form-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-xl w-full p-6 shadow-2xl relative my-8">
+            <button onclick="closeProductFormModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 id="prod-modal-title" class="text-lg font-extrabold mb-4">Tambah Produk Baru</h3>
+
+            <form onsubmit="handleSaveProduct(event)" class="space-y-4">
+                <input type="hidden" id="prod-id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Nama Aplikasi / Produk <span class="text-red-500">*</span></label>
+                        <input type="text" id="prod-name" required placeholder="Contoh: Netflix Premium 1 Bulan" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Kategori <span class="text-red-500">*</span></label>
+                        <select id="prod-category" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm"></select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Harga Jual (Rp) <span class="text-red-500">*</span></label>
+                        <input type="number" id="prod-price" required min="0" placeholder="25000" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Jumlah Stok <span class="text-red-500">*</span></label>
+                        <input type="number" id="prod-stock" required min="0" placeholder="15" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Foto Produk (URL atau Upload Gambar)</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="prod-image" placeholder="https://..." class="flex-grow px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm">
+                        <label class="px-3.5 py-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-semibold text-xs flex items-center gap-1.5 cursor-pointer shrink-0 hover:bg-indigo-500/20 transition">
+                            <i class="fa-solid fa-image"></i> Upload
+                            <input type="file" accept="image/*" onchange="handleImageUpload(event, 'prod-image')" class="hidden">
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Deskripsi & Keunggulan Produk</label>
+                    <textarea id="prod-desc" rows="2" required placeholder="4K Ultra HD, Akun Private, Full Garansi 30 Hari..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm"></textarea>
+                </div>
+
+                <!-- Pengaturan Kirim Otomatis -->
+                <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-3">
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <div>
+                            <span class="font-bold text-xs flex items-center gap-1.5"><i class="fa-solid fa-bolt text-amber-500"></i> Aktifkan Kirim Otomatis</span>
+                            <p class="text-[11px] text-slate-500">Detail akun/voucher langsung tampil di Cek Pesanan saat order berstatus Paid</p>
+                        </div>
+                        <input type="checkbox" id="prod-auto-send" onchange="toggleAutoSendField()" class="w-5 h-5 accent-indigo-600 rounded cursor-pointer">
+                    </label>
+                    <div id="auto-send-data-wrap" class="hidden">
+                        <label class="block text-xs font-semibold mb-1">Data Akun / Voucher / Link Akses Otomatis</label>
+                        <textarea id="prod-auto-content" rows="2" placeholder="Contoh: Email: user@premium.com | Pass: Techno123 | PIN: 1122" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-mono"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeProductFormModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-semibold">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition">Simpan Produk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800/80 mt-12 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="md:col-span-2 space-y-3">
+                    <div class="flex items-center gap-2.5">
+                        <img id="footer-logo" src="https://placehold.co/80x80/4f46e5/ffffff?text=WT" alt="Logo" class="w-8 h-8 rounded-lg object-cover">
+                        <span id="footer-title" class="font-extrabold text-lg bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">Warung Techno</span>
+                    </div>
+                    <p id="footer-about-text" class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md leading-relaxed">
+                        Warung Techno adalah platform penyedia layanan langganan aplikasi premium digital legal, murah, dan bergaransi penuh dengan layanan pengiriman otomatis.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-3">Navigasi Cepat</h4>
+                    <ul id="footer-links" class="space-y-2 text-xs text-slate-500 dark:text-slate-400">
+                        <!-- Populated dynamically -->
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-3">Hubungi Kami</h4>
+                    <div class="space-y-2 text-xs text-slate-500 dark:text-slate-400">
+                        <a id="footer-wa-link" href="#" target="_blank" class="flex items-center gap-2 hover:text-emerald-500 transition">
+                            <i class="fa-brands fa-whatsapp text-base text-emerald-500"></i> Chat WhatsApp CS
+                        </a>
+                        <a id="footer-tg-link" href="#" target="_blank" class="flex items-center gap-2 hover:text-sky-500 transition">
+                            <i class="fa-brands fa-telegram text-base text-sky-500"></i> Order via Bot Telegram
+                        </a>
+                        <a id="footer-ig-link" href="#" target="_blank" class="flex items-center gap-2 hover:text-pink-500 transition">
+                            <i class="fa-brands fa-instagram text-base text-pink-500"></i> Instagram Resmi
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-200/80 dark:border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+                <p id="footer-copyright">© 2025 Warung Techno. All rights reserved.</p>
+                <p class="flex items-center gap-1">Dibuat dengan <i class="fa-solid fa-bolt text-amber-400"></i> Sistem Toko Digital Otomatis</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- External Script JS -->
+    <script src="script.js"></script>
+</body>
+</html>

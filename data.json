@@ -1,0 +1,141 @@
+{
+  "adminPass": "admin123",
+  "settings": {
+    "siteTitle": "Warung Techno",
+    "siteDesc": "Toko Aplikasi Premium Digital Termurah, Legal & Bergaransi Penuh.",
+    "logoUrl": "https://placehold.co/100x100/4f46e5/ffffff?text=WT",
+    "faviconUrl": "https://placehold.co/64x64/4f46e5/ffffff?text=WT",
+    "googleVerify": "WT-GVERIFY-2025-OK",
+    "waNumber": "6281234567890",
+    "telegramBotUrl": "https://t.me/WarungTechnoBot",
+    "bannerBadge": "🔥 Promo Spesial Minggu Ini",
+    "bannerTitle": "Langganan Aplikasi Premium Mulai Rp 10.000-an!",
+    "bannerSubtitle": "Nikmati akses Netflix 4K, Spotify Premium, Canva Pro, ChatGPT Plus & YouTube Premium tanpa iklan. Proses instan & bergaransi penuh!",
+    "footerAbout": "Warung Techno adalah pusat belanja produk digital & aplikasi premium terpercaya di Indonesia. Harga hemat, proses instan 24/7, dan bergaransi.",
+    "footerCopy": "© 2025 Warung Techno - Toko Aplikasi Premium. All rights reserved.",
+    "footerIg": "https://instagram.com"
+  },
+  "categories": [
+    { "id": "cat-1", "name": "Streaming & Hiburan", "icon": "fa-solid fa-film" },
+    { "id": "cat-2", "name": "Musik & Audio", "icon": "fa-solid fa-music" },
+    { "id": "cat-3", "name": "Desain & Editing", "icon": "fa-solid fa-palette" },
+    { "id": "cat-4", "name": "AI & Produktivitas", "icon": "fa-solid fa-robot" }
+  ],
+  "products": [
+    {
+      "id": "prod-1",
+      "name": "Netflix Premium 4K UHD (1 Bulan)",
+      "categoryId": "cat-1",
+      "price": 35000,
+      "stock": 24,
+      "image": "https://placehold.co/600x400/e50914/ffffff?text=NETFLIX+4K",
+      "description": "Resolusi 4K Ultra HD, 1 Profile Private + PIN, bisa semua device (TV, HP, Laptop), Full Garansi 30 Hari.",
+      "autoSend": true,
+      "autoContent": "Email: netflix.vip@warungtechno.id | Pass: NflxPremium99 | Profile: #3 (PIN: 2409)"
+    },
+    {
+      "id": "prod-2",
+      "name": "Spotify Premium Individual (1 Bulan)",
+      "categoryId": "cat-2",
+      "price": 22000,
+      "stock": 18,
+      "image": "https://placehold.co/600x400/1db954/ffffff?text=SPOTIFY+PRO",
+      "description": "Bebas iklan, bisa download lagu offline, kualitas audio Extreme, bisa akun lama atau baru.",
+      "autoSend": true,
+      "autoContent": "Link Invite Family Plan: https://spotify.com/invite/warungtechno-vip88 (Alamat: Jl. Merdeka No 10 Jakarta)"
+    },
+    {
+      "id": "prod-3",
+      "name": "Canva Pro Invite Email (1 Tahun)",
+      "categoryId": "cat-3",
+      "price": 25000,
+      "stock": 40,
+      "image": "https://placehold.co/600x400/00c4cc/ffffff?text=CANVA+PRO",
+      "description": "Akses jutaan template premium, hapus background 1 klik, Brand Kit, menggunakan akun email pribadi Anda.",
+      "autoSend": true,
+      "autoContent": "Link Gabung Tim Canva Pro: https://canva.com/brand/join?token=WT-CANVA-PRO-2025"
+    },
+    {
+      "id": "prod-4",
+      "name": "ChatGPT Plus GPT-4o Sharing (1 Bulan)",
+      "categoryId": "cat-4",
+      "price": 45000,
+      "stock": 12,
+      "image": "https://placehold.co/600x400/10a37f/ffffff?text=CHATGPT+PLUS",
+      "description": "Akses model terbaru GPT-4o, DALL-E 3 Image Generator, respon super cepat saat jam sibuk.",
+      "autoSend": true,
+      "autoContent": "Login OpenAI -> Email: ai.pro@warungtechno.id | Pass: GPT4Plus#2025"
+    },
+    {
+      "id": "prod-5",
+      "name": "YouTube Premium + Music (1 Bulan)",
+      "categoryId": "cat-1",
+      "price": 15000,
+      "stock": 30,
+      "image": "https://placehold.co/600x400/ff0000/ffffff?text=YOUTUBE+PREMIUM",
+      "description": "Nonton tanpa iklan, putar di latar belakang (background play), gratis akses YouTube Music Premium.",
+      "autoSend": false,
+      "autoContent": ""
+    },
+    {
+      "id": "prod-6",
+      "name": "CapCut Pro Video Editor (1 Bulan)",
+      "categoryId": "cat-3",
+      "price": 28000,
+      "stock": 15,
+      "image": "https://placehold.co/600x400/111827/ffffff?text=CAPCUT+PRO",
+      "description": "Unlock semua efek Pro, transisi eksklusif, auto-caption tanpa batas, export 4K 60fps tanpa watermark.",
+      "autoSend": true,
+      "autoContent": "Akun CapCut Pro -> Email: capcut.vip@warungtechno.id | Pass: EditingPro88"
+    }
+  ],
+  "orders": [
+    {
+      "id": "WT-1001",
+      "customerName": "Rizky Pratama",
+      "productId": "prod-1",
+      "productName": "Netflix Premium 4K UHD (1 Bulan)",
+      "qty": 1,
+      "total": 35000,
+      "method": "WhatsApp",
+      "status": "PAID",
+      "createdAt": "2025-02-20 14:30",
+      "autoContentDelivered": "Email: netflix.vip@warungtechno.id | Pass: NflxPremium99 | Profile: #3 (PIN: 2409)"
+    },
+    {
+      "id": "WT-1002",
+      "customerName": "Siti Nabila",
+      "productId": "prod-3",
+      "productName": "Canva Pro Invite Email (1 Tahun)",
+      "qty": 2,
+      "total": 50000,
+      "method": "WhatsApp",
+      "status": "PENDING",
+      "createdAt": "2025-02-21 09:15",
+      "autoContentDelivered": "Link Gabung Tim Canva Pro: https://canva.com/brand/join?token=WT-CANVA-PRO-2025"
+    }
+  ],
+  "pages": [
+    {
+      "id": "page-tentang",
+      "title": "Tentang Kami",
+      "slug": "tentang",
+      "isSystem": true,
+      "content": "Selamat datang di Warung Techno!\n\nWarung Techno adalah platform penyedia produk digital dan aplikasi premium berlangganan yang berfokus pada kemudahan, kecepatan, dan keamanan bertransaksi.\n\nMengapa Memilih Warung Techno?\n1. Produk 100% Legal & Bergaransi Penuh sesuai durasi langganan.\n2. Fitur Kirim Otomatis: Detail akun/voucher langsung dapat diakses setelah pembayaran dikonfirmasi.\n3. Harga jauh lebih hemat dibandingkan berlangganan reguler.\n4. Dukungan Customer Service ramah melalui WhatsApp dan Bot Telegram setiap hari."
+    },
+    {
+      "id": "page-kontak",
+      "title": "Hubungi Kami",
+      "slug": "kontak",
+      "isSystem": true,
+      "content": "Butuh bantuan, konsultasi produk, atau klaim garansi? Tim support Warung Techno siap membantu Anda!\n\n• Jam Operasional: Setiap Hari (08.00 - 23.00 WIB)\n• WhatsApp CS: +62 812-3456-7890\n• Bot Telegram Otomatis: @WarungTechnoBot\n• Email Support: support@warungtechno.id\n\nSilakan hubungi kami dengan menyertakan ID Order (contoh: WT-1001) agar proses pengecekan lebih cepat."
+    },
+    {
+      "id": "page-cek",
+      "title": "Cek Pesanan",
+      "slug": "cek-pesanan",
+      "isSystem": true,
+      "content": "Masukkan Nomor ID Order atau Nama Pemesan Anda untuk melacak status pesanan serta mengambil detail akun/voucher untuk produk bertanda Kirim Otomatis."
+    }
+  ]
+}
